@@ -3,7 +3,7 @@
 # Created Date: Monday, September 23rd 2024
 # Author: Zihan
 # -----
-# Last Modified: Monday, 23rd September 2024 9:54:46 pm
+# Last Modified: Tuesday, 24th September 2024 12:40:01 am
 # Modified By: the developer formerly known as Zihan at <wzh4464@gmail.com>
 # -----
 # HISTORY:
@@ -58,10 +58,22 @@ def test_data_module(module, module_name):
     assert y_val.shape == (n_val,), f"Validation labels shape mismatch: {y_val.shape}"
     assert y_test.shape == (n_test,), f"Test labels shape mismatch: {y_test.shape}"
 
+    # 检查标签是否符合二分类任务要求
+    unique_train_labels = set(y_train)
+    unique_val_labels = set(y_val)
+    unique_test_labels = set(y_test)
+
+    assert unique_train_labels <= {0, 1}, f"Train labels contain values outside {0, 1}: {unique_train_labels}"
+    assert unique_val_labels <= {0, 1}, f"Validation labels contain values outside {0, 1}: {unique_val_labels}"
+    assert unique_test_labels <= {0, 1}, f"Test labels contain values outside {0, 1}: {unique_test_labels}"
+
     print(f"{module_name} Test Passed!")
     print(f"x_train shape: {x_train.shape}, y_train shape: {y_train.shape}")
     print(f"x_val shape: {x_val.shape}, y_val shape: {y_val.shape}")
-    print(f"x_test shape: {x_test.shape}, y_test shape: {y_test.shape}\n")
+    print(f"x_test shape: {x_test.shape}, y_test shape: {y_test.shape}")
+    print(f"Unique train labels: {unique_train_labels}")
+    print(f"Unique val labels: {unique_val_labels}")
+    print(f"Unique test labels: {unique_test_labels}\n")
 
 
 if __name__ == "__main__":
