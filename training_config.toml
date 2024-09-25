@@ -1,0 +1,158 @@
+# Default configuration
+[default]
+num_epoch = 21
+batch_size = 60
+lr = 0.01
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256
+
+# MNIST configurations
+[mnist.logreg]
+num_epoch = 21
+batch_size = 64
+lr = 0.003
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256
+
+[mnist.dnn]
+num_epoch = 21
+batch_size = 64
+lr = 0.0005
+decay = false
+n_tr = 256
+n_val = 256
+n_test = 256
+
+[mnist.cnn]
+num_epoch = 21
+batch_size = 64
+lr = 0.0004
+decay = false
+n_tr = 256
+n_val = 256
+n_test = 256
+
+# 20news configurations
+[20news.logreg]
+num_epoch = 21
+batch_size = 64
+lr = 0.01
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256
+
+[20news.dnn]
+num_epoch = 21
+batch_size = 64
+lr = 0.01
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256
+
+[20news.cnn]
+num_epoch = 21
+batch_size = 64
+lr = 0.01
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256
+
+# Adult configurations
+[adult.logreg]
+num_epoch = 21
+batch_size = 16
+lr = 0.1
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256
+
+[adult.dnn]
+num_epoch = 21
+batch_size = 64
+lr = 0.3
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256
+
+[adult.cnn]
+num_epoch = 21
+batch_size = 60
+lr = 0.02
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256
+
+# CIFAR configurations
+[cifar.logreg]
+num_epoch = 21
+batch_size = 60
+lr = 0.01
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256
+
+[cifar.dnn]
+num_epoch = 21
+batch_size = 64
+lr = 0.18
+decay = true
+n_tr = 256
+n_val = 1256
+n_test = 256
+
+[cifar.cnn]
+num_epoch = 50
+batch_size = 128
+lr = 0.01
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256
+
+[cifar.cnn_cifar]
+num_epoch = 21
+batch_size = 64
+lr = 0.01
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256
+
+# EMNIST configurations
+[emnist.logreg]
+num_epoch = 21
+batch_size = 64
+lr = 0.003
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256
+
+[emnist.dnn]
+num_epoch = 21
+batch_size = 64
+lr = 0.06
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256
+
+[emnist.cnn]
+num_epoch = 21
+batch_size = 64
+lr = 0.2
+decay = true
+n_tr = 256
+n_val = 256
+n_test = 256

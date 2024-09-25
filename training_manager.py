@@ -3,7 +3,7 @@
 # Created Date: Thursday, September 26th 2024
 # Author: Zihan
 # -----
-# Last Modified: Thursday, 26th September 2024 12:34:20 am
+# Last Modified: Thursday, 26th September 2024 12:54:18 am
 # Modified By: the developer formerly known as Zihan at <wzh4464@gmail.com>
 # -----
 # HISTORY:
@@ -54,14 +54,24 @@ class TrainingManager:
             os.path.dirname(os.path.abspath(__file__)), save_dir
         )
 
-        # Load default configuration
-        config = self.load_config()
-        self.n_tr = n_tr or config[key]["n_tr"]
-        self.n_val = n_val or config[key]["n_val"]
-        self.n_test = n_test or config[key]["n_test"]
-        self.num_epoch = num_epoch or 21  # Default value if not provided
-        self.batch_size = batch_size or 60  # Default value if not provided
-        self.lr = lr or 0.01  # Default value if not provided
+        # Load configurations
+        self.data_config = self.load_data_config()
+        self.training_config = self.load_training_config()
+
+        # Set training parameters
+        self.n_tr = n_tr or self.data_config[key]["n_tr"]
+        self.n_val = n_val or self.data_config[key]["n_val"]
+        self.n_test = n_test or self.data_config[key]["n_test"]
+
+        specific_config = self.training_config.get(
+            f"{key}.{model_type}", self.training_config["default"]
+        )
+        self.num_epoch = num_epoch or specific_config.get("num_epoch", 21)
+        self.batch_size = batch_size or specific_config.get("batch_size", 60)
+        self.lr = lr or specific_config.get("lr", 0.01)
+        self.lr_decay = specific_config.get("lr_decay", True)
+        self.lr_decay_method = specific_config.get("lr_decay_method", "sqrt")
+
         self.compute_counterfactual = compute_counterfactual
         self.relabel_percentage = relabel_percentage
 
@@ -81,7 +91,7 @@ class TrainingManager:
             model_type=self.model_type,
             seed=self.seed,
             device=self.device,
-            data_dir=os.path.join(self.save_dir, "data"),
+            data_dir=os.path.join(os.path.dirname(__file__), "data"),
             n_tr=self.n_tr,
             n_val=self.n_val,
             n_test=self.n_test,
@@ -89,13 +99,29 @@ class TrainingManager:
             logger=self.logger,
         )
 
-    def load_config(self):
+    def load_data_config(self):
         config_path = os.path.join(os.path.dirname(__file__), "dataset", "config.toml")
+        with open(config_path, "r") as f:
+            return toml.load(f)
+
+    def load_training_config(self):
+        config_path = os.path.join(os.path.dirname(__file__), "training_config.toml")
         with open(config_path, "r") as f:
             return toml.load(f)
 
     def initialize_model(self, input_dim):
         return get_model(self.model_type, input_dim, self.logger).to(self.device)
+
+    def apply_lr_decay(self, lr, step):
+        self.logger.debug(
+            f"Applying learning rate decay method: {self.lr_decay_method}"
+        )
+        if self.lr_decay_method == "sqrt":
+            return lr * np.sqrt(step / (step + 1))
+        elif self.lr_decay_method == "step":
+            return lr * 0.1 if step % 30 == 0 else lr
+        # Add other decay methods here if needed
+        return lr
 
     def train(self) -> Dict[str, Any]:
         x_tr, y_tr, x_val, y_val, data_sizes = self.data_loader.load_data()
@@ -126,7 +152,10 @@ class TrainingManager:
         train_losses = [np.nan]
 
         for n in range(-1, data_sizes["n_tr"] if self.compute_counterfactual else 0):
-            self.logger.info(f"Training model {n+1}/{data_sizes['n_tr']}")
+            if self.compute_counterfactual:
+                self.logger.info(f"Training model {n+1}/{data_sizes['n_tr']}")
+            else:
+                self.logger.info("Training main model")
             torch.manual_seed(self.seed)
             model = net_func()
             loss_fn = nn.BCEWithLogitsLoss()
