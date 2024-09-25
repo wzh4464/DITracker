@@ -1,23 +1,23 @@
-[MnistModule]
-n_tr = 900
-n_val = 900
-n_test = 900
+[mnist]
+n_tr = 256
+n_val = 256
+n_test = 256
 input_shape = [28, 28, 1]
 
-[EMNISTModule]
-n_tr = 900
-n_val = 900
-n_test = 900
+[emnist]
+n_tr = 256
+n_val = 256
+n_test = 256
 input_shape = [28, 28, 1]
 
-[CifarModule]
-n_tr = 900
-n_val = 900
-n_test = 900
+[cifar]
+n_tr = 256
+n_val = 256
+n_test = 256
 input_shape = [32, 32, 3]
 
-[AdultModule]
-n_tr = 900
-n_val = 900
-n_test = 900
+[adult]
+n_tr = 256
+n_val = 256
+n_test = 256
 num_features = 100
